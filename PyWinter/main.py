@@ -1,7 +1,8 @@
 import pygame
 import sys
 
-from settings import *
+from PyWinter.settings import *
+from PyWinter.levels import backgrounds
 
 
 class Game:
