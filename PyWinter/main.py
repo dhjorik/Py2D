@@ -17,7 +17,7 @@ class Game:
         self.screen.fill('black')
         pygame.display.flip()
         self.delta_time = self.timer.tick(TICK)
-        msg1 = f'{self.clock.get_fps():.1f}'
+        msg1 = f'{self.timer.get_fps():.1f}'
         pygame.display.set_caption(f'FPS: {msg1}')
 
     def update(self):
