@@ -10,5 +10,8 @@ MAP_TileY = 60
 MAP_Cols = WIDTH / MAP_TileX
 MAP_Rows = HEIGHT / MAP_TileY
 
+THRESHOLD_LEFT = WIDTH / 4
+THRESHOLD_RIGHT = WIDTH * 3 / 4
+
 # MAP_StepX = WIDTH / MAP_TileX
 # MAP_stepY = HEIGHT / MAP_TileY

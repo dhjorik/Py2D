@@ -33,18 +33,43 @@ class Background(ABC):
 
     _files = []
     _levels = []
+    _shifts = []
 
-    def __init__(self, name, screen):
+    def __init__(self, name, game):
         self.name = name
+        self.game = game
         self.path = os.path.join(backgrounds, name)
         for i in range(self.LEVELS):
             self._files.append(BK_NAME.format(i))
+            self._shifts.append(0)
 
     def draw(self):
-        pass
+        for i in range(self.LEVELS):
+            x = self._shift[i]
+            bkg = self._levels[0]
+            self.game.screen.blit(bkg, (x % WIDTH, 0))
+            self.game.screen.blit(bkg, (x % WIDTH - WIDTH - 1, 0))
 
     def update(self):
-        pass
+        self.shift_world()
+
+    def shift_world(self):
+        # Scroll when the player sprite moves closer to the right.
+        # if self.player.pos.x >= 500:
+        #     self.player.pos.x = 500  # Stop at 500.
+        #     self.shift_platforms()
+        # # Scroll when the player sprite moves closer to the left.
+        # if self.player.pos.x <= 120:
+        #     self.player.pos.x = 120  # Stop at 120.
+        #     self.shift_platforms()
+        self.shift_platforms()
+
+    def shift_platforms(self):
+        # for plat in self.platforms:  # Iterate over the platform sprites.
+        #     plat.pos.x -= self.player.vel.x  # Update the platform's pos vector.
+        #     plat.rect.x = plat.pos.x  # Update the rect.
+        for i in range(self.LEVELS):
+            self._shift[i] += (self.game.camera_dir * self.SPEEDS[i])
 
     def load_assets(self):
         self._levels = []
@@ -61,6 +86,6 @@ class Winter01(Background):
     SPECIALS = ['snowing']
     SPEEDS = [12, 10, 7, 4, 2, 0]
 
-    def __init__(self):
-        super(Winter01, self).__init__('winter_01')
+    def __init__(self, screen):
+        super(Winter01, self).__init__('winter_01', screen)
         self.load_assets()
