@@ -27,6 +27,8 @@ class Background(ABC):
     _layers = []
     _shifts = []
 
+    player = (0, 0)
+
     def __init__(self, name, game):
         self.name = name
         self.game = game
@@ -36,6 +38,9 @@ class Background(ABC):
             self._shifts.append(0)
         self.back_layer = pygame.Surface(RES, pygame.SRCALPHA, 32)
         self.front_layer = pygame.Surface(RES, pygame.SRCALPHA, 32)
+
+        self.player_speed = 0
+        self.camera_speed = 0
 
     def draw(self):
         self.back_layer.fill((0, 0, 0, 0))
@@ -60,9 +65,9 @@ class Background(ABC):
     def shift_world(self):
         if len(self._speeds) == 0:
             return
-        factor = self.game.player_speed / PLAYER_SPEED
+        factor = self.player_speed / PLAYER_SPEED
         for i in range(self.LAYERS):
-            self._shifts[i] -= (self.game.camera_dir * self._speeds[i] * factor)
+            self._shifts[i] -= (self.camera_speed * self._speeds[i] * factor)
             if self._shifts[i] < 0:
                 self._shifts[i] += WIDTH
             if self._shifts[i] >= WIDTH:
@@ -90,3 +95,5 @@ class Winter01(Background):
         for i in range(self.LAYERS):
             speed = round(i * (PLAYER_SPEED/backs))
             self._speeds.append(speed)
+
+        self.player = (0, 11 * MAP_TileY)
