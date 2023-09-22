@@ -6,7 +6,7 @@ TOL = 1e-6
 RES = WIDTH, HEIGHT = 1200, 900
 # RES = WIDTH, HEIGHT = 640, 480
 FPS = 50
-TICKS = 50
+TICKS = 10
 
 MAP_Cols = 20
 MAP_Rows = 15
@@ -29,7 +29,7 @@ EPISODES = range(NUM_EPISODES)
 WORLDS = range(NUM_WORLDS)
 MAPS = range(NUM_MAPS)
 
-PLAYER_WALK_TIME = 3    # Number of seconds to go from 0 to WIDTH
+PLAYER_WALK_TIME = 5    # Number of seconds to go from 0 to WIDTH
 PLAYER_SPEED = round(WIDTH/PLAYER_WALK_TIME/TICKS)
 
 

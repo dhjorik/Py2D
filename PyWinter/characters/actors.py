@@ -1,10 +1,9 @@
-from abc import ABC
 from importlib import resources as _resources
 import os
 import sys
 import pygame
 
-from PyWinter.settings import *
+from PyWinter.engine.settings import *
 from PyWinter import assets
 
 

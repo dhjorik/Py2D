@@ -1,6 +1,6 @@
 import pygame
 from PyWinter.characters.actors import Actor
-from PyWinter.settings import *
+from PyWinter.engine.settings import *
 
 
 class Player01(Actor):

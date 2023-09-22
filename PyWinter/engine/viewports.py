@@ -1,5 +1,6 @@
 import pygame
-from PyWinter.settings import *
+from PyWinter.engine.settings import *
+from PyWinter.engine.screen import ScreenLayers
 
 
 class Viewport:
@@ -42,9 +43,9 @@ class Viewport:
         if self.start_x > self.view_max_x:
             self.start_x = self.view_max_x
 
-        self.game.screen.blit(self.background.back_layer, (0, 0))
-        self.game.screen.blit(self.level.game_layer, (-self.start_x, 0, WIDTH, HEIGHT))
-        self.game.screen.blit(self.background.front_layer, (0, 0))
+        # self.game.screen.blit(self.background.back_layer, (0, 0))
+        self.game.screen.blit_buffer(self.level.game_layer, (-self.start_x, 0, WIDTH, HEIGHT), ScreenLayers.GAME_LAYERS, 0)
+        # self.game.screen.blit(self.background.front_layer, (0, 0))
 
     def update(self):
         direction = 0

@@ -4,7 +4,8 @@ import os
 import sys
 import pygame
 
-from PyWinter.settings import *
+from PyWinter.engine.settings import *
+from PyWinter.engine.screen import ScreenLayers
 from PyWinter import assets
 
 
@@ -19,12 +20,13 @@ SBK_NAME = '{0}.png'
 
 class Background(ABC):
     LAYERS = 1
-    SPECIALS = []
+    SPECIALS = 0
     _speeds = []
     BACK_LAYERS = [True]
 
     _files = []
     _layers = []
+    _specials = []
     _shifts = []
 
     player = (0, 0)
@@ -33,6 +35,11 @@ class Background(ABC):
         self.name = name
         self.game = game
         self.path = os.path.join(backgrounds, name)
+
+        self.NUM_BACK_LAYERS = len([x for x in self.BACK_LAYERS if x])
+        self.LAYERS = len(self.BACK_LAYERS)
+        self.NUM_FRONT_LAYERS = self.LAYERS - self.NUM_BACK_LAYERS
+
         for i in range(self.LAYERS):
             self._files.append(BK_NAME.format(i))
             self._shifts.append(0)
@@ -46,18 +53,21 @@ class Background(ABC):
         self.back_layer.fill((0, 0, 0, 0))
         self.front_layer.fill((0, 0, 0, 0))
 
+        frg = 0
+        bkg = 0
         for i in range(self.LAYERS):
             x = self._shifts[i]
-            bkg = self._layers[i]
+            bkg_layer = self._layers[i]
             if self.BACK_LAYERS[i]:
-                self.back_layer.blit(bkg, (x % WIDTH, 0))
-                self.back_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH, 0), ScreenLayers.BACK_LAYERS, bkg)
+                bkg += 1
+                # self.back_layer.blit(bkg, (x % WIDTH, 0))
+                # self.back_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
             else:
-                self.front_layer.blit(bkg, (x % WIDTH, 0))
-                self.front_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
-
-        self.back_layer.convert_alpha()
-        self.front_layer.convert_alpha()
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH, 0), ScreenLayers.FRONT_LAYERS, frg)
+                frg += 1
+                # self.front_layer.blit(bkg, (x % WIDTH, 0))
+                # self.front_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
 
     def update(self):
         self.shift_world()
@@ -84,12 +94,14 @@ class Background(ABC):
 
 
 class Winter01(Background):
-    LAYERS = 6
-    SPECIALS = ['snowing']
-    BACK_LAYERS = [True, True, True, True, False, False]
+    # BACK_LAYERS = [True, True, True, True, False, False]
+    BACK_LAYERS = [True, True, False]
+    SPECIALS = 1
+
+    _specials = ['snowing']
 
     def __init__(self, game):
-        super(Winter01, self).__init__('winter_01', game)
+        super(Winter01, self).__init__('winter_02', game)
         self.load_assets()
         backs = len([bck for bck in self.BACK_LAYERS if bck])
         for i in range(self.LAYERS):

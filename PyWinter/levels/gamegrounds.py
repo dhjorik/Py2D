@@ -1,6 +1,5 @@
-import os
 import pygame
-from PyWinter.settings import *
+from PyWinter.engine.settings import *
 
 
 class GameGround:
