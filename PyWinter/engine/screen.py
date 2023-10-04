@@ -1,6 +1,7 @@
 import pygame
-from PyWinter.engine.settings import *
 from OpenGL.GL import *
+
+from PyWinter.engine.settings import *
 
 
 class ScreenLayers:
@@ -21,9 +22,9 @@ class Screen:
     def __init__(self, game):
         self.game = game
 
-        flags = pygame.OPENGL | pygame.DOUBLEBUF # | pygame.OPENGLBLIT
-        self.screen = pygame.display.set_mode(RES, flags)
-        # self.screen = pygame.display.set_mode(RES)
+        flags = SCREEN_FLAGS
+        self.screen = pygame.display.set_mode(SCREEN_RES, flags)
+        # self.screen = pygame.display.set_mode(SCREEN_RES)
 
         self.info = pygame.display.Info()
         self._setup_opengl()

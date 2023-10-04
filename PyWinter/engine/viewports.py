@@ -43,9 +43,7 @@ class Viewport:
         if self.start_x > self.view_max_x:
             self.start_x = self.view_max_x
 
-        # self.game.screen.blit(self.background.back_layer, (0, 0))
         self.game.screen.blit_buffer(self.level.game_layer, (-self.start_x, 0, WIDTH, HEIGHT), ScreenLayers.GAME_LAYERS, 0)
-        # self.game.screen.blit(self.background.front_layer, (0, 0))
 
     def update(self):
         direction = 0
@@ -86,5 +84,4 @@ class Viewport:
         self.level.player_x = self.player_x
         self.level.player_y = self.player_y + round(self.player.player_delta_y)
         self.level.player_sprite = self.player.player_layer
-
         self.level.update()

@@ -12,7 +12,7 @@ from PyWinter import assets
 _this = sys.modules[__name__]
 _path = os.path.dirname(__file__)
 
-backgrounds = (_resources.files(assets)/'backgrounds')
+backgrounds = str(_resources.files(assets)/'backgrounds')
 
 BK_NAME = 'level_{0:02d}.png'
 SBK_NAME = '{0}.png'
@@ -59,12 +59,12 @@ class Background(ABC):
             x = self._shifts[i]
             bkg_layer = self._layers[i]
             if self.BACK_LAYERS[i]:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH, 0), ScreenLayers.BACK_LAYERS, bkg)
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.BACK_LAYERS, bkg)
                 bkg += 1
                 # self.back_layer.blit(bkg, (x % WIDTH, 0))
                 # self.back_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
             else:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH, 0), ScreenLayers.FRONT_LAYERS, frg)
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.FRONT_LAYERS, frg)
                 frg += 1
                 # self.front_layer.blit(bkg, (x % WIDTH, 0))
                 # self.front_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
@@ -88,20 +88,23 @@ class Background(ABC):
         for i in range(self.LAYERS):
             fl = self._files[i]
             filename = os.path.join(self.path, fl)
-            level = pygame.image.load(filename)
+            level = pygame.image.load(filename).convert_alpha()
             layer = pygame.transform.scale(level, RES).convert_alpha()
-            self._layers.append(layer)
+            layer_bkg = pygame.Surface((WIDTH*2, HEIGHT), pygame.SRCALPHA, 32)
+            layer_bkg.blit(layer, (0, 0))
+            layer_bkg.blit(layer, (WIDTH, 0))
+            self._layers.append(layer_bkg)
 
 
 class Winter01(Background):
-    # BACK_LAYERS = [True, True, True, True, False, False]
-    BACK_LAYERS = [True, True, False]
+    BACK_LAYERS = [True, True, True, True, False, False]
+    # BACK_LAYERS = [True, True, False]
     SPECIALS = 1
 
     _specials = ['snowing']
 
     def __init__(self, game):
-        super(Winter01, self).__init__('winter_02', game)
+        super(Winter01, self).__init__('winter_01', game)
         self.load_assets()
         backs = len([bck for bck in self.BACK_LAYERS if bck])
         for i in range(self.LAYERS):

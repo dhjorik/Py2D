@@ -10,7 +10,7 @@ from PyWinter import assets
 _this = sys.modules[__name__]
 _path = os.path.dirname(__file__)
 
-sprites = (_resources.files(assets)/'sprites')
+sprites = str(_resources.files(assets)/'sprites')
 
 SPRITE_NAME = '{0}_{1:02d}.png'
 
@@ -22,6 +22,7 @@ class Actor:
     _sprites = {}
 
     current_frame = 0
+    current_sequence = 0
 
     size_x = MAP_TileX
     size_y = MAP_TileY
@@ -30,8 +31,7 @@ class Actor:
         self.name = name
         self.game = game
         self.path = os.path.join(sprites, name)
-        for action, num_frames in self.ANIMATIONS.values():
-            # num_frames = self.ANIMATIONS[action]
+        for action, num_frames, num_sequences in self.ANIMATIONS.values():
             frames = []
             for frame in range(num_frames):
                 filename = SPRITE_NAME.format(action, frame)
@@ -46,7 +46,7 @@ class Actor:
         pass
 
     def load_assets(self):
-        for action, num_frames in self.ANIMATIONS.values():
+        for action, num_frames, num_sequences in self.ANIMATIONS.values():
             frames = []
             for frame in range(num_frames):
                 fl = self._files[action][frame]

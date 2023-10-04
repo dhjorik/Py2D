@@ -5,14 +5,25 @@ from PyWinter.engine.settings import *
 
 class Player01(Actor):
     ANIMATIONS = {
-        PlayerState.IDLE: ('Idle', 10),
-        PlayerState.WALK: ('Walk', 10),
-        PlayerState.RUN:  ('Run', 8),
-        PlayerState.JUMP: ('Jump', 8),
-        PlayerState.FALL: ('Fall', 8),
-        PlayerState.HURT: ('Hurt', 10),
-        PlayerState.DEAD: ('Dead', 10),
-        PlayerState.SLIDE: ('Slide', 10),
+        PlayerState.IDLE: ('Idle', 10, 10),
+        PlayerState.WALK: ('Walk', 10, 10),
+        PlayerState.RUN:  ('Run', 8, 8),
+        PlayerState.JUMP: ('Jump', 8, 16),
+        PlayerState.FALL: ('Fall', 8, 16),
+        PlayerState.HURT: ('Hurt', 10, 10),
+        PlayerState.DEAD: ('Dead', 10, 10),
+        PlayerState.SLIDE: ('Slide', 10, 10),
+    }
+
+    SEQUENCERS = {
+        PlayerState.IDLE: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ),
+        PlayerState.WALK: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ),
+        PlayerState.RUN:  (0, 1, 2, 3, 4, 5, 6, 7, ),
+        PlayerState.JUMP: (0, 1, 2, 3, 4, 5, 6, 7, 4, 5, 6, 7, 4, 5, 6, 7, ),
+        PlayerState.FALL: (0, 1, 2, 3, 4, 5, 6, 7, 4, 5, 6, 7, 4, 5, 6, 7, ),
+        PlayerState.HURT: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ),
+        PlayerState.DEAD: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ),
+        PlayerState.SLIDE: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ),
     }
 
     player_move = False
@@ -22,8 +33,8 @@ class Player01(Actor):
     player_fall = False
 
     player_delta_y = 0
-    player_jump_y = MAP_TileY * 2
-    player_step_y = player_jump_y / 8
+    player_jump_y = MAP_TileY * 4
+    player_step_y = player_jump_y / 16
 
     player_state = PlayerState.IDLE
 
@@ -37,12 +48,12 @@ class Player01(Actor):
         if self.player_fall:
             self.player_state = PlayerState.FALL
 
-        sprite_name, num_frames = self.ANIMATIONS[self.player_state]
+        sprite_name, num_frames, num_sequences = self.ANIMATIONS[self.player_state]
+        sprite_sequences = self.SEQUENCERS[self.player_state]
         sprites = self._sprites[sprite_name]
-        sprite = sprites[self.current_frame]
 
         self.current_frame += 1
-        if self.current_frame >= num_frames:
+        if self.current_frame >= num_sequences:
             if self.player_fall:
                 self.player_jump = False
                 self.player_fall = False
@@ -53,12 +64,14 @@ class Player01(Actor):
                 self.player_delta_y = -self.player_jump_y
             self.current_frame = 0
 
+        self.current_sequence = sprite_sequences[self.current_frame]
+        sprite = sprites[self.current_sequence]
+
         self.player_layer.fill((0, 0, 0, 0))
+        r_sprite = sprite
         if self.player_mirror:
-            rsprite = pygame.transform.flip(sprite, True, False)
-        else:
-            rsprite = sprite
-        self.player_layer.blit(rsprite, (0, 0))
+            r_sprite = pygame.transform.flip(sprite, True, False)
+        self.player_layer.blit(r_sprite, (0, 0))
 
     def update(self):
         cur_state = self.player_state

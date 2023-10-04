@@ -9,8 +9,8 @@ class GameGround:
     _player_y = 0
     player_sprite = None
 
-    size_x = 48     # Number of tiles in x
-    size_y = 15     # Number of tiles in y
+    size_x = MAP_Cols + 2  # Number of tiles in x
+    size_y = MAP_Rows  # Number of tiles in y
 
     # Sprite bounding box
     sprite_area_min_x = 0
@@ -27,6 +27,8 @@ class GameGround:
         # Level Size in unit
         self.level_width = self.size_x * MAP_TileX
         self.level_height = self.size_y * MAP_TileY
+        # self.level_width = 2 * WIDTH
+        # self.level_height = HEIGHT
 
         # Bounding Box
         self.level_min_x = 0
@@ -36,8 +38,8 @@ class GameGround:
 
         self.sprite_area_min_x = 0
         self.sprite_area_min_y = 0
-        self.sprite_area_max_x = self.level_width - MAP_TileX
-        self.sprite_area_max_y = self.level_height - MAP_TileY
+        self.sprite_area_max_x = (self.size_x * MAP_TileX) - MAP_TileX
+        self.sprite_area_max_y = (self.size_y * MAP_TileY) - MAP_TileY
 
         self.game_layer = pygame.Surface((self.level_width, self.level_height), pygame.SRCALPHA, 32)
         if self.test_grid:

@@ -1,3 +1,5 @@
+import os
+
 from PyWinter.engine.screen import Screen
 from PyWinter.engine.viewports import Viewport
 from PyWinter.engine.gui import Gui
@@ -19,7 +21,7 @@ class Game:
         self.delta_time = 0
         self.delta_time = 0
 
-        self.running = False
+        self.running = 0
 
     def draw(self):
         self.viewport.draw()
@@ -27,10 +29,8 @@ class Game:
         msg1 = f'FPS - {self.timer.get_fps():.01f}'
         tnr_font = pygame.font.SysFont('timesnewroman', 22)
         letters = tnr_font.render(msg1, False, 'black', (255, 255, 255, 0))
-        self.screen.blit_buffer(letters, (0, 800), ScreenLayers.GUI_LAYERS, 0)
-
-        # pygame.display.set_caption(f'FPS: {msg1} - Delta: {self.delta_time}')
-        # pygame.display.set_caption(f'PXY {self.level.player_x, self.level.player_y} - VX {self.viewport.scroll_x} - GX {self.viewport.start_x}')
+        position = HEIGHT*8/10
+        self.screen.blit_buffer(letters, (0, position), ScreenLayers.GUI_LAYERS, 0)
 
         self.screen.draw()
         self.screen.flip()
@@ -43,7 +43,7 @@ class Game:
         self.viewport.update()
 
     def run(self):
-        self.running = True
+        self.running = 1
         self.screen.set_layers()
         while self.running:
             self.check_events()
@@ -53,9 +53,9 @@ class Game:
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.running = False
+                self.running = 0
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self.running = False
+                self.running = 0
 
 
 if __name__ == '__main__':
