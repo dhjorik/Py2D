@@ -75,7 +75,7 @@ class GameGround:
             self.game_layer.blit(letter, (0, y))
             y += MAP_TileY
             i += 1
-        self.game_layer.convert_alpha()
+        # self.game_layer.convert_alpha()
 
     def get_player_x(self):
         return self._player_x

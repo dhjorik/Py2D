@@ -88,8 +88,8 @@ class Background(ABC):
         for i in range(self.LAYERS):
             fl = self._files[i]
             filename = os.path.join(self.path, fl)
-            level = pygame.image.load(filename).convert_alpha()
-            layer = pygame.transform.scale(level, RES).convert_alpha()
+            level = pygame.image.load(filename) #.convert_alpha()
+            layer = pygame.transform.scale(level, RES) #.convert_alpha()
             layer_bkg = pygame.Surface((WIDTH*2, HEIGHT), pygame.SRCALPHA, 32)
             layer_bkg.blit(layer, (0, 0))
             layer_bkg.blit(layer, (WIDTH, 0))

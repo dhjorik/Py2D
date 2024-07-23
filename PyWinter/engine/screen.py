@@ -1,5 +1,6 @@
 import pygame
 from OpenGL.GL import *
+from PySide6 import QtWidgets, QtGui
 
 from PyWinter.engine.settings import *
 
@@ -13,6 +14,7 @@ class ScreenLayers:
 
 
 class Screen:
+    canvas = None
     offsets = [0, 0, 0, 0, 0]
 
     num_layers = 1
@@ -23,16 +25,21 @@ class Screen:
         self.game = game
 
         flags = SCREEN_FLAGS
-        self.screen = pygame.display.set_mode(SCREEN_RES, flags)
+        self.screen = QtWidgets.QMainWindow()
+        self.screen.setWindowTitle('PyWinter Demo')
+        self.screen.setGeometry(0, 0, SCREEN_W, SCREEN_H)
+
+        # self.screen = pygame.display.set_mode(SCREEN_RES, flags)
         # self.screen = pygame.display.set_mode(SCREEN_RES)
 
         self.info = pygame.display.Info()
-        self._setup_opengl()
+        self._setup_ui()
 
-        self.texID = glGenTextures(1)
+        print('Driver:', pygame.display.get_driver())
+        print('Surfaces:', pygame.display.get_surface())
 
-        print(pygame.display.get_driver())
-        print(pygame.display.get_surface())
+    def show(self):
+        self.screen.show()
 
     def set_layers(self):
         self.num_layers = self.game.background.NUM_BACK_LAYERS
@@ -61,63 +68,30 @@ class Screen:
         pass
 
     def draw(self):
-        if len(self.layers) > 0:
-            self.buffer.blits([lay for lay in self.layers if lay is not None])
-        else:
-            self.buffer.fill((0, 0, 0, 0))
-        # self.screen.blit(self.buffer, (0, 0))
-
-        glClear(GL_COLOR_BUFFER_BIT)
-        glLoadIdentity()
-        glDisable(GL_LIGHTING)
-        glEnable(GL_TEXTURE_2D)
-        # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        # glClearColor(0, 0, 0, 1.0)
+        try:
+            if len(self.layers) > 0:
+                self.buffer.blits([lay for lay in self.layers if lay is not None])
+            else:
+                self.buffer.fill((0, 0, 0, 0))
+        except:
+            pass
 
         # draw texture openGL Texture
         self._surface_to_texture(self.buffer)
-        glBindTexture(GL_TEXTURE_2D, self.texID)
-        glBegin(GL_QUADS)
-        glTexCoord2f(0, 0)
-        glVertex2f(-1, 1)
-        glTexCoord2f(0, 1)
-        glVertex2f(-1, -1)
-        glTexCoord2f(1, 1)
-        glVertex2f(1, -1)
-        glTexCoord2f(1, 0)
-        glVertex2f(1, 1)
-        glEnd()
 
     def update(self):
         self.layers = [None] * self.num_layers
 
-    def _setup_opengl(self):
-        glViewport(0, 0, self.info.current_w, self.info.current_h)
-        glDepthRange(0, 1)
-        glMatrixMode(GL_PROJECTION)
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
-        glShadeModel(GL_SMOOTH)
-        glClearColor(0.0, 0.0, 0.0, 0.0)
-        glClearDepth(1.0)
-        glDisable(GL_DEPTH_TEST)
-        glDisable(GL_LIGHTING)
-        glDepthFunc(GL_LEQUAL)
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-        glEnable(GL_BLEND)
+    def _setup_ui(self):
+        self.canvas = QtWidgets.QLabel(self.screen)
+        self.canvas.setGeometry(0, 0, SCREEN_W, SCREEN_H)
 
     def _setup_fonts(self):
         self.default_font12 = pygame.font.Font(None, 12)
         self.default_font24 = pygame.font.Font(None, 24)
 
     def _surface_to_texture(self,  pygame_surface):
-        rgb_surface = pygame.image.tostring(pygame_surface, 'RGB')
-        glBindTexture(GL_TEXTURE_2D, self.texID)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
-        s_rect = pygame_surface.get_rect()
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, s_rect.width, s_rect.height, 0, GL_RGB, GL_UNSIGNED_BYTE, rgb_surface)
-        glGenerateMipmap(GL_TEXTURE_2D)
-        glBindTexture(GL_TEXTURE_2D, 0)
+        # Convert the Pygame surface to a QImage
+        image = QtGui.QImage(pygame_surface.get_buffer(), pygame_surface.get_width(), pygame_surface.get_height(), QtGui.QImage.Format_RGB32)
+        pixmap = QtGui.QPixmap.fromImage(image)
+        self.canvas.setPixmap(pixmap)

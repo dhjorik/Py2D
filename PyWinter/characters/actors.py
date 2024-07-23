@@ -52,6 +52,6 @@ class Actor:
                 fl = self._files[action][frame]
                 filename = os.path.join(self.path, fl)
                 level = pygame.image.load(filename)
-                sprite = pygame.transform.scale(level, (self.size_x, self.size_y)).convert_alpha()
+                sprite = pygame.transform.scale(level, (self.size_x, self.size_y)) #.convert_alpha()
                 frames.append(sprite)
             self._sprites.update({action: frames})

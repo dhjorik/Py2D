@@ -1,4 +1,6 @@
 import os
+import sys
+from PySide6 import QtWidgets
 
 from PyWinter.engine.screen import Screen
 from PyWinter.engine.viewports import Viewport
@@ -33,7 +35,7 @@ class Game:
         self.screen.blit_buffer(letters, (0, position), ScreenLayers.GUI_LAYERS, 0)
 
         self.screen.draw()
-        self.screen.flip()
+        # self.screen.flip()
 
     def update(self):
         # self.delta_time = self.timer.tick(FPS)
@@ -44,6 +46,7 @@ class Game:
 
     def run(self):
         self.running = 1
+        self.screen.show()
         self.screen.set_layers()
         while self.running:
             self.check_events()
@@ -59,11 +62,14 @@ class Game:
 
 
 if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+
     pPass, pFail = pygame.init()
 
     print(pygame.display.Info())
     game = Game()
     game.run()
+    result = app.exec()
 
     pygame.quit()
-    sys.exit(0)
+    sys.exit(result)
