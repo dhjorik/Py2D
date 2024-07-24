@@ -61,13 +61,9 @@ class Background(ABC):
             if self.BACK_LAYERS[i]:
                 self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.BACK_LAYERS, bkg)
                 bkg += 1
-                # self.back_layer.blit(bkg, (x % WIDTH, 0))
-                # self.back_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
             else:
                 self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.FRONT_LAYERS, frg)
                 frg += 1
-                # self.front_layer.blit(bkg, (x % WIDTH, 0))
-                # self.front_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
 
     def update(self):
         self.shift_world()
@@ -98,7 +94,6 @@ class Background(ABC):
 
 class Winter01(Background):
     BACK_LAYERS = [True, True, True, True, False, False]
-    # BACK_LAYERS = [True, True, False]
     SPECIALS = 1
 
     _specials = ['snowing']

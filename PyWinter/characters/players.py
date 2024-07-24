@@ -86,24 +86,24 @@ class Player01(Actor):
             self.player_delta_y += self.player_step_y
             return
 
-        keys = pygame.key.get_pressed()
+        keys = self.game.key_pressed
 
-        if keys[pygame.K_UP]:
+        if pygame.K_UP in keys:
             self.player_delta_y -= self.player_step_y
             self.player_state = PlayerState.JUMP
             self.player_jump = True
 
-        if keys[pygame.K_RIGHT]:
+        if pygame.K_RIGHT in keys:
             self.player_mirror = False
             self.player_move = True
             self.player_state = PlayerState.WALK
 
-        if keys[pygame.K_LEFT]:
+        if pygame.K_LEFT in keys:
             self.player_mirror = True
             self.player_move = True
             self.player_state = PlayerState.WALK
 
-        if keys[pygame.K_LSHIFT]:
+        if pygame.K_LSHIFT in keys:
             if self.player_move:
                 self.player_state = PlayerState.RUN
 

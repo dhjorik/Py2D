@@ -48,13 +48,14 @@ class Viewport:
     def update(self):
         direction = 0
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LSHIFT]:
+        keys = self.game.key_pressed
+        print(keys)
+        if pygame.K_LSHIFT in keys:
             self.player_speed = PLAYER_SPEED * 1.5
         else:
             self.player_speed = PLAYER_SPEED
 
-        if keys[pygame.K_RIGHT]:
+        if pygame.K_RIGHT in keys:
             if self.player_x < self.level.level_max_x:
                 self.player_x += self.player_speed
                 self.scroll_x += self.player_speed
@@ -62,7 +63,7 @@ class Viewport:
             else:
                 self.player_x = self.level.level_max_x
 
-        if keys[pygame.K_LEFT]:
+        if pygame.K_LEFT in keys:
             if self.player_x > 0:
                 self.player_x -= self.player_speed
                 self.scroll_x -= self.player_speed

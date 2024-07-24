@@ -13,7 +13,7 @@ class ScreenLayers:
     GUI_LAYERS = 4
 
 
-class Screen:
+class Screen(QtWidgets.QLabel):
     canvas = None
     offsets = [0, 0, 0, 0, 0]
 
@@ -22,24 +22,15 @@ class Screen:
     buffer = None
 
     def __init__(self, game):
+        super().__init__(game)
+
         self.game = game
-
-        flags = SCREEN_FLAGS
-        self.screen = QtWidgets.QMainWindow()
-        self.screen.setWindowTitle('PyWinter Demo')
-        self.screen.setGeometry(0, 0, SCREEN_W, SCREEN_H)
-
-        # self.screen = pygame.display.set_mode(SCREEN_RES, flags)
-        # self.screen = pygame.display.set_mode(SCREEN_RES)
 
         self.info = pygame.display.Info()
         self._setup_ui()
 
-        print('Driver:', pygame.display.get_driver())
-        print('Surfaces:', pygame.display.get_surface())
-
-    def show(self):
-        self.screen.show()
+        # print('Driver:', pygame.display.get_driver())
+        # print('Surfaces:', pygame.display.get_surface())
 
     def set_layers(self):
         self.num_layers = self.game.background.NUM_BACK_LAYERS
@@ -63,10 +54,6 @@ class Screen:
         self.layers[to_layer] = (source, destination)
         return True
 
-    def flip(self):
-        pygame.display.flip()
-        pass
-
     def draw(self):
         try:
             if len(self.layers) > 0:
@@ -83,8 +70,7 @@ class Screen:
         self.layers = [None] * self.num_layers
 
     def _setup_ui(self):
-        self.canvas = QtWidgets.QLabel(self.screen)
-        self.canvas.setGeometry(0, 0, SCREEN_W, SCREEN_H)
+        self.setGeometry(0, 0, SCREEN_W, SCREEN_H)
 
     def _setup_fonts(self):
         self.default_font12 = pygame.font.Font(None, 12)
@@ -94,4 +80,4 @@ class Screen:
         # Convert the Pygame surface to a QImage
         image = QtGui.QImage(pygame_surface.get_buffer(), pygame_surface.get_width(), pygame_surface.get_height(), QtGui.QImage.Format_RGB32)
         pixmap = QtGui.QPixmap.fromImage(image)
-        self.canvas.setPixmap(pixmap)
+        self.setPixmap(pixmap)
