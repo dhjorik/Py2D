@@ -1,5 +1,4 @@
 import pygame
-from OpenGL.GL import *
 from PySide6 import QtWidgets, QtGui
 
 from PyWinter.engine.settings import *
@@ -56,11 +55,13 @@ class Screen(QtWidgets.QLabel):
 
     def draw(self):
         try:
+            self.buffer = pygame.Surface(RES, pygame.SRCALPHA, 32)
             if len(self.layers) > 0:
                 self.buffer.blits([lay for lay in self.layers if lay is not None])
             else:
                 self.buffer.fill((0, 0, 0, 0))
-        except:
+
+        except Exception as exc:
             pass
 
         # draw texture openGL Texture
@@ -81,3 +82,5 @@ class Screen(QtWidgets.QLabel):
         image = QtGui.QImage(pygame_surface.get_buffer(), pygame_surface.get_width(), pygame_surface.get_height(), QtGui.QImage.Format_RGB32)
         pixmap = QtGui.QPixmap.fromImage(image)
         self.setPixmap(pixmap)
+        del pixmap
+        del image

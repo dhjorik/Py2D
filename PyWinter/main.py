@@ -16,7 +16,12 @@ from PyWinter.characters import *
 
 class Game(QtWidgets.QMainWindow):
     key_pressed = []
-    key_status = []
+    key_map = [
+        [QKeys.Key_Left, pygame.K_LEFT],
+        [QKeys.Key_Right, pygame.K_RIGHT],
+        [QKeys.Key_Up, pygame.K_UP],
+        [QKeys.Key_Shift, pygame.K_LSHIFT],
+    ]
 
     def __init__(self):
         super().__init__()
@@ -88,28 +93,18 @@ class Game(QtWidgets.QMainWindow):
         self.ticker.start()
 
     def check_next_events(self):
-        self.key_pressed = []
-        #if QKeys.Key_Left in self.key_status:
-        #    print('Key Left')
-        #    self.key_pressed.append(pygame.K_LEFT)
-        #if QKeys.Key_Right in self.key_status:
-        #    print('Key Right')
-        #    self.key_pressed.append(pygame.K_RIGHT)
+        pass
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
 
         key_pressed = event.key()
-        if key_pressed == QKeys.Key_Left:
-            if pygame.K_LEFT not in self.key_pressed:
-                self.key_pressed.append(pygame.K_LEFT)
-            # if QKeys.Key_Left not in self.key_status:
-            #    self.key_status.append(QKeys.Key_Left)
-        if key_pressed == QKeys.Key_Right:
-            if pygame.K_RIGHT not in self.key_pressed:
-                self.key_pressed.append(pygame.K_RIGHT)
-            #if QKeys.Key_Right not in self.key_status:
-            #    self.key_status.append(QKeys.Key_Right)
+        modifiers = event.modifiers()
+
+        for qk,pgk in self.key_map:
+            if key_pressed == qk:
+                if pgk not in self.key_pressed:
+                    self.key_pressed.append(pgk)
 
         if key_pressed == QtCore.Qt.Key.Key_Q:
             self.running = False
@@ -118,12 +113,11 @@ class Game(QtWidgets.QMainWindow):
         super().keyReleaseEvent(event)
 
         key_pressed = event.key()
-        if key_pressed == QKeys.Key_Right:
-            if QKeys.Key_Right in self.key_status:
-                self.key_status.remove(QKeys.Key_Right)
-        if key_pressed == QKeys.Key_Left:
-            if QKeys.Key_Left in self.key_status:
-                self.key_status.remove(QKeys.Key_Left)
+
+        for qk,pgk in self.key_map:
+            if key_pressed == qk:
+                if pgk in self.key_pressed:
+                    self.key_pressed.remove(pgk)
 
 
 if __name__ == '__main__':

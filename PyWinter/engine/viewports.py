@@ -49,7 +49,6 @@ class Viewport:
         direction = 0
 
         keys = self.game.key_pressed
-        print(keys)
         if pygame.K_LSHIFT in keys:
             self.player_speed = PLAYER_SPEED * 1.5
         else:
