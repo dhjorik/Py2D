@@ -58,11 +58,13 @@ class Background(ABC):
         for i in range(self.LAYERS):
             x = self._shifts[i]
             bkg_layer = self._layers[i]
+            # x_pos = x % WIDTH - WIDTH
+            x_pos = (x + WIDTH/2) % WIDTH
             if self.BACK_LAYERS[i]:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.BACK_LAYERS, bkg)
+                self.game.screen.blit_buffer(bkg_layer, (x_pos, 0, WIDTH, HEIGHT), ScreenLayers.BACK_LAYERS, bkg)
                 bkg += 1
             else:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.FRONT_LAYERS, frg)
+                self.game.screen.blit_buffer(bkg_layer, (x_pos, 0, WIDTH, HEIGHT), ScreenLayers.FRONT_LAYERS, frg)
                 frg += 1
 
     def update(self):
@@ -74,10 +76,7 @@ class Background(ABC):
         factor = self.player_speed / PLAYER_SPEED
         for i in range(self.LAYERS):
             self._shifts[i] -= (self.camera_speed * self._speeds[i] * factor)
-            if self._shifts[i] < 0:
-                self._shifts[i] += WIDTH
-            if self._shifts[i] >= WIDTH:
-                self._shifts[i] -= WIDTH
+            self._shifts[i] = self._shifts[i] % WIDTH
 
     def load_assets(self):
         self._layers = []
@@ -88,7 +87,7 @@ class Background(ABC):
             layer = pygame.transform.scale(level, RES) #.convert_alpha()
             layer_bkg = pygame.Surface((WIDTH*2, HEIGHT), pygame.SRCALPHA, 32)
             layer_bkg.blit(layer, (0, 0))
-            layer_bkg.blit(layer, (WIDTH, 0))
+            # layer_bkg.blit(layer, (WIDTH, 0))
             self._layers.append(layer_bkg)
 
 
@@ -107,3 +106,17 @@ class Winter01(Background):
             self._speeds.append(speed)
 
         self.player = (0, 11 * MAP_TileY)
+
+
+class WinterMock(Background):
+    BACK_LAYERS = [True, True, False]
+
+    def __init__(self, game):
+        super(WinterMock, self).__init__('winter_mock', game)
+        self.load_assets()
+        backs = len([bck for bck in self.BACK_LAYERS if bck])
+        for i in range(self.LAYERS):
+            speed = round(i * (PLAYER_SPEED/backs))
+            self._speeds.append(speed)
+
+        self.player = (WIDTH/2, 11 * MAP_TileY)

@@ -68,7 +68,8 @@ class Screen(QtWidgets.QLabel):
         self._surface_to_texture(self.buffer)
 
     def update(self):
-        self.layers = [None] * self.num_layers
+        pass
+        # self.layers = [None] * self.num_layers
 
     def _setup_ui(self):
         self.setGeometry(0, 0, SCREEN_W, SCREEN_H)

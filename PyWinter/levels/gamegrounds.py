@@ -9,7 +9,8 @@ class GameGround:
     _player_y = 0
     player_sprite = None
 
-    size_x = MAP_Cols + 2  # Number of tiles in x
+    # size_x = MAP_Cols + 2  # Number of tiles in x
+    size_x = MAP_Cols * 5  # Number of tiles in x
     size_y = MAP_Rows  # Number of tiles in y
 
     # Sprite bounding box
@@ -18,7 +19,7 @@ class GameGround:
     sprite_area_max_x = 0
     sprite_area_max_y = 0
 
-    test_grid = True
+    test_grid = False
 
     def __init__(self, game, name):
         self.name = name

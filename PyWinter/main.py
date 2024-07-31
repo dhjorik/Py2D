@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 import os
 import sys
@@ -23,6 +24,8 @@ class Game(QtWidgets.QMainWindow):
         [QKeys.Key_Shift, pygame.K_LSHIFT],
     ]
 
+    do_update = QtCore.Signal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle('PyWinter Demo')
@@ -31,7 +34,8 @@ class Game(QtWidgets.QMainWindow):
         self.screen = Screen(self)
 
         self.level = GameGround(self, (1, 1, 1))
-        self.background = Winter01(self)
+#        self.background = Winter01(self)
+        self.background = WinterMock(self)
         self.gui = Gui(self)
         self.player = Player01(self)
         self.viewport = Viewport(self)
@@ -45,6 +49,8 @@ class Game(QtWidgets.QMainWindow):
         self.delta_time = 0
         self.fps = 0
 
+        self.do_update.connect(self.update_gui)
+
         self.running = False
 
     def update_gui(self):
@@ -52,13 +58,17 @@ class Game(QtWidgets.QMainWindow):
             self.update_events()
             self.draw()
             self.check_next_events()
+            # self.do_update.emit()
         else:
             self.close()
 
     def draw(self):
         self.viewport.draw()
 
-        msg1 = f'FPS - {self.fps:.01f}'
+        x = self.level.player_x
+        y = self.level.player_y
+
+        msg1 = f'FPS - {self.fps:.01f} - ({x:.01f}, {y:.01f})'
         tnr_font = pygame.font.SysFont('timesnewroman', 22)
         letters = tnr_font.render(msg1, False, 'black', (255, 255, 255, 0))
         position = HEIGHT*8/10
@@ -91,6 +101,7 @@ class Game(QtWidgets.QMainWindow):
         self.show()
         self.screen.set_layers()
         self.ticker.start()
+        # self.do_update.emit()
 
     def check_next_events(self):
         pass
