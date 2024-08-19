@@ -73,6 +73,10 @@ class Screen(QtWidgets.QLabel):
 
     def _setup_ui(self):
         self.setGeometry(0, 0, SCREEN_W, SCREEN_H)
+        self.setMinimumWidth(SCREEN_W)
+        self.setMinimumHeight(SCREEN_H)
+        self.setMaximumWidth(SCREEN_W)
+        self.setMaximumHeight(SCREEN_H)
 
     def _setup_fonts(self):
         self.default_font12 = pygame.font.Font(None, 12)
@@ -80,7 +84,8 @@ class Screen(QtWidgets.QLabel):
 
     def _surface_to_texture(self,  pygame_surface):
         # Convert the Pygame surface to a QImage
-        image = QtGui.QImage(pygame_surface.get_buffer(), pygame_surface.get_width(), pygame_surface.get_height(), QtGui.QImage.Format_RGB32)
+        scaled_surface = pygame.transform.smoothscale(pygame_surface, SCREEN_RES)
+        image = QtGui.QImage(scaled_surface.get_buffer(), scaled_surface.get_width(), scaled_surface.get_height(), QtGui.QImage.Format_RGB32)
         pixmap = QtGui.QPixmap.fromImage(image)
         self.setPixmap(pixmap)
         del pixmap
