@@ -43,7 +43,7 @@ class Viewport:
         if self.start_x > self.view_max_x:
             self.start_x = self.view_max_x
 
-        self.game.screen.blit_buffer(self.level.game_layer, (-self.start_x, 0, WIDTH, HEIGHT), ScreenLayers.GAME_LAYERS, 0)
+        self.game.screen.blit_buffer(self.level.game_layer, (-self.start_x, 0), ScreenLayers.GAME_LAYERS, 0)
 
     def update(self):
         direction = 0

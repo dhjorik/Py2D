@@ -59,15 +59,11 @@ class Background(ABC):
             x = self._shifts[i]
             bkg_layer = self._layers[i]
             if self.BACK_LAYERS[i]:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.BACK_LAYERS, bkg)
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0), ScreenLayers.BACK_LAYERS, bkg)
                 bkg += 1
-                # self.back_layer.blit(bkg, (x % WIDTH, 0))
-                # self.back_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
             else:
-                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0, WIDTH, HEIGHT), ScreenLayers.FRONT_LAYERS, frg)
+                self.game.screen.blit_buffer(bkg_layer, (x % WIDTH - WIDTH, 0), ScreenLayers.FRONT_LAYERS, frg)
                 frg += 1
-                # self.front_layer.blit(bkg, (x % WIDTH, 0))
-                # self.front_layer.blit(bkg, (x % WIDTH - WIDTH, 0))
 
     def update(self):
         self.shift_world()

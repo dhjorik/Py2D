@@ -9,6 +9,9 @@ class GameGround:
     _player_y = 0
     player_sprite = None
 
+    virtual_size_x = 2048
+    virtual_size_y = MAP_Rows
+
     size_x = MAP_Cols + 2  # Number of tiles in x
     size_y = MAP_Rows  # Number of tiles in y
 
@@ -27,8 +30,8 @@ class GameGround:
         # Level Size in unit
         self.level_width = self.size_x * MAP_TileX
         self.level_height = self.size_y * MAP_TileY
-        # self.level_width = 2 * WIDTH
-        # self.level_height = HEIGHT
+        self.virtual_level_width = self.virtual_size_x * MAP_TileX
+        self.virtual_level_height = self.virtual_size_y * MAP_TileY
 
         # Bounding Box
         self.level_min_x = 0

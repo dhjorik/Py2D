@@ -36,8 +36,8 @@ class Game:
         self.screen.flip()
 
     def update(self):
-        # self.delta_time = self.timer.tick(FPS)
-        self.delta_time = self.timer.tick()
+        self.delta_time = self.timer.tick(FPS)
+        # self.delta_time = self.timer.tick()
 
         # Execute physics and state updates
         self.viewport.update()
@@ -66,4 +66,3 @@ if __name__ == '__main__':
     game.run()
 
     pygame.quit()
-    sys.exit(0)
